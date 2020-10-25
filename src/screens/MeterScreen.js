@@ -1,9 +1,25 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { Card } from "react-native-elements";
 import DropDownPicker from "react-native-dropdown-picker";
+import { useIsFocused } from "@react-navigation/native";
+import Loading from "../components/Loading";
+import { theme } from "../utils/theme";
 
-export default function MeterScreen() {
+const MeterScreen = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [energyUsage, setEnergyUsage] = useState(5);
+  const [availableUnit, setAvailableUnit] = useState(333);
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    setIsLoading(true);
+  }, [isFocused]);
+
+  setTimeout(() => {
+    setIsLoading(false);
+  }, 5000);
+
   const usageOptions = [
     {
       label: "TODAY",
@@ -17,10 +33,6 @@ export default function MeterScreen() {
       label: "THIS MONTH",
       value: "month",
     },
-    {
-      label: "THIS YEAR",
-      value: "year",
-    },
   ];
 
   const meterOptions = [
@@ -33,106 +45,133 @@ export default function MeterScreen() {
       value: "office",
     },
   ];
+
+  // function to filter energy usage
+  const handleUnitUsage = (text) => {
+    if (text.value === "today") {
+      setEnergyUsage(5)
+    };
+    if (text.value === "week") {
+      setEnergyUsage(24)
+    };
+    if (text.value === "month") {
+      setEnergyUsage(46.02)
+    }
+  }
+
+  // function to filter energy usage for different meter
+  const handleMeter = (text) => {
+    if (text.value === "home") {
+      setAvailableUnit(333)
+    };
+    if (text.value === "office") {
+      setAvailableUnit(207)
+    };
+  }
+
   return (
     <>
-      <View
-        style={{
-          paddingVertical: 10,
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Text style={{ fontWeight: "bold", fontSize: 18 }}>METER</Text>
-        <DropDownPicker
-          items={meterOptions}
-          defaultValue="home"
-          defaultIndex={5}
-          activeLabelStyle={{ color: "#771144" }}
-          containerStyle={{
-            height: 40,
-            width: 100,
-            marginLeft: 18,
-          }}
-          style={{ paddingHorizontal: 10 }}
-          onChangeItem={(item) => console.log(item.value)}
-        />
-      </View>
-      <View style={styles.container}>
-        <Card containerStyle={{ backgroundColor: "#FFF", borderRadius: 5 }}>
-          <Card.Title>CURRENT PRICE</Card.Title>
-          <Text
-            style={{
-              textAlign: "center",
-              fontSize: 28,
-              color: "#8d7f3e",
-              fontWeight: "bold",
-            }}
-          >
-            ₦137/UNIT
-          </Text>
-        </Card>
-        <Card containerStyle={{ backgroundColor: "#FFF", borderRadius: 5 }}>
-          <Card.Title>AVAILABLE UNIT</Card.Title>
-          <Text
-            style={{
-              textAlign: "center",
-              fontSize: 35,
-              color: "#8d7f3e",
-              fontWeight: "bold",
-            }}
-          >
-            333
-          </Text>
-        </Card>
-        <Card containerStyle={{ backgroundColor: "#FFF", borderRadius: 5 }}>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <>
           <View
             style={{
-              marginTop: 15,
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
+              paddingVertical: 10,
+              marginTop: 10,
+              ...styles.cardView,
             }}
           >
-            <Card.Title>USAGE</Card.Title>
-            <DropDownPicker
-              items={usageOptions}
-              defaultValue="today"
-              defaultIndex={5}
-              activeLabelStyle={{ color: "#771144" }}
-              containerStyle={{
-                height: 40,
-                width: 130,
-                marginLeft: 16,
-                marginTop: -15,
+            <Text
+              style={{
+                color: theme.colors.secondary,
+                fontWeight: "bold",
+                fontSize: 18,
               }}
+            >
+              METER
+            </Text>
+            <DropDownPicker
+              items={meterOptions}
+              defaultValue="home"
+              defaultIndex={5}
+              activeLabelStyle={{ color: theme.colors.primary }}
+              containerStyle={styles.meterDropdown}
               style={{ paddingHorizontal: 10 }}
-              onChangeItem={(item) => console.log(item.value)}
+              onChangeItem={(text) => handleMeter(text)}
             />
           </View>
-          <Text
-            style={{
-              marginTop: 30,
-              paddingBottom: 30,
-              textAlign: "center",
-              fontSize: 35,
-              color: "#8d7f3e",
-              fontWeight: "bold",
-            }}
-          >
-            5.00kWh
-          </Text>
-        </Card>
-      </View>
+          <View style={styles.container}>
+            <Card containerStyle={styles.card}>
+              <Card.Title>CURRENT PRICE</Card.Title>
+              <Text style={{ ...styles.text, fontSize: 28 }}>₦137/UNIT</Text>
+            </Card>
+            <Card containerStyle={styles.card}>
+              <Card.Title>AVAILABLE UNIT</Card.Title>
+              <Text style={{ ...styles.text, fontSize: 35 }}>{availableUnit}</Text>
+            </Card>
+            <Card containerStyle={styles.card}>
+              <View style={{ marginTop: 15, ...styles.cardView }}>
+                <Card.Title>USAGE</Card.Title>
+                <DropDownPicker
+                  items={usageOptions}
+                  defaultValue="today"
+                  defaultIndex={5}
+                  activeLabelStyle={{ color: theme.colors.primary }}
+                  containerStyle={styles.usageDropdown}
+                  style={{ paddingHorizontal: 10 }}
+                  onChangeItem={(text) => handleUnitUsage(text)}
+                />
+              </View>
+              <Text style={styles.usageText}>{`${energyUsage.toFixed(2)}kWh`}</Text>
+            </Card>
+          </View>
+        </>
+      )}
     </>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F9F8F9",
   },
+  card: {
+    backgroundColor: "#FFF",
+    borderRadius: 5,
+  },
+  text: {
+    textAlign: "center",
+    fontSize: 28,
+    color: theme.colors.accent,
+    fontWeight: "bold",
+  },
+  cardView: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  usageDropdown: {
+    height: 40,
+    width: 130,
+    marginLeft: 16,
+    marginTop: -15,
+  },
+  usageText: {
+    marginTop: 30,
+    paddingBottom: 30,
+    textAlign: "center",
+    fontSize: 35,
+    color: theme.colors.accent,
+    fontWeight: "bold",
+  },
+  meterDropdown: {
+    height: 40,
+    width: 100,
+    marginLeft: 18,
+  },
 });
+
+export default MeterScreen;

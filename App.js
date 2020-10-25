@@ -1,10 +1,19 @@
-import React from 'react';
-import AppNavigator from './AppNavigator';
+import React, { useEffect } from "react";
+import { Provider } from "react-redux";
+import store from "./src/store/index";
+import { AppNavigator } from "./AppNavigator";
+import { startSocketIO } from "./src/services/index";
 
-function App() {
+const App = (props) => {
+  useEffect(() => {
+    startSocketIO();
+  }, []);
+
   return (
-    <AppNavigator />
+    <Provider store={store}>
+      <AppNavigator {...props} />
+    </Provider>
   );
-}
+};
 
 export default App;
