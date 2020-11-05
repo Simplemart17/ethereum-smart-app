@@ -17,6 +17,7 @@ const LoginScreen = ({ navigation, logUserIn, isLoading }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState({ email: null, password: null });
+  const [loadingRequest, setLoadingRequest] = useState(false);
 
   const handleSubmit = async () => {
     const { payload } = await logUserIn({ email, password });
@@ -44,6 +45,13 @@ const LoginScreen = ({ navigation, logUserIn, isLoading }) => {
     Keyboard.dismiss();
   };
 
+  const simulateRequest = () => {
+    setLoadingRequest(true)
+    setTimeout(() => {
+      navigation.reset({ index: 0, routes: [{ name: "METER" }] });
+    }, 1000);
+  };
+
   return (
     <View style={styles.container}>
       <Logo />
@@ -66,12 +74,14 @@ const LoginScreen = ({ navigation, logUserIn, isLoading }) => {
         label="Password"
         returnKeyType="done"
         value={password}
-        onChangeText={(text) => {setPassword(text)}}
+        onChangeText={(text) => {
+          setPassword(text);
+        }}
         secureTextEntry
         errorText={error.password}
       />
 
-      <Button mode="contained" loading={isLoading} onPress={handleSubmit}>
+      <Button mode="contained" loading={loadingRequest} onPress={simulateRequest}>
         Login
       </Button>
 

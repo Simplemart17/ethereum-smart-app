@@ -159,13 +159,13 @@ const MainScreenStack = () => {
         inactiveTintColor: "gray",
       }}
     >
-      <Tab.Screen name="Account" component={HomeStackScreen} />
       <Tab.Screen name="Meter" component={MeterStackScreen} />
-      <Tab.Screen name="History" component={HistoryStackScreen} />
       <Tab.Screen
         name="Smart Assistant"
         component={SmartAssistantStackScreen}
       />
+      <Tab.Screen name="History" component={HistoryStackScreen} />
+      <Tab.Screen name="Account" component={HomeStackScreen} />
     </Tab.Navigator>
   );
 };
@@ -174,10 +174,10 @@ const getHeaderTitle = (route) => {
   const routeName = getFocusedRouteNameFromRoute(route);
 
   switch (routeName) {
-    case "Account":
-      return "ACCOUNT";
     case "Meter":
       return "METER";
+    case "Account":
+      return "ACCOUNT";
     case "History":
       return "TRANSACTION HISTORY";
     case "Smart Assistant":
@@ -203,7 +203,7 @@ export const AppNavigator = () => {
             })}
           />
           <RootStack.Screen
-            name="ACCOUNT"
+            name="METER"
             component={MainScreenStack}
             options={({ route }) => ({
               headerTitle: getHeaderTitle(route),

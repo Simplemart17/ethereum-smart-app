@@ -3,7 +3,7 @@ import Axios from "axios";
 import socketIO from "socket.io-client";
 
 export const request = Axios.create({});
-request.defaults.baseURL = "http://localhost:8082";
+request.defaults.baseURL = "http://d6b3e780b01d.ngrok.io";
 request.defaults.timeout = 1000;
 
 export const getToken = async () => {
@@ -79,7 +79,7 @@ export const put = async (data, URL) => {
 };
 
 // Initialize Socket IO
-const socket = socketIO("http://localhost:8082");
+const socket = socketIO("http://d6b3e780b01d.ngrok.io");
 
 export const startSocketIO = () => {
   socket.connect();

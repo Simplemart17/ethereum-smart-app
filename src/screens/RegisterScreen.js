@@ -54,7 +54,7 @@ const RegisterScreen = ({ navigation, registerUser, isLoading }) => {
       />
 
       <Button mode="contained" loading={isLoading} onPress={handleSubmit}>
-        Login
+        Register
       </Button>
 
       <View style={styles.row}>

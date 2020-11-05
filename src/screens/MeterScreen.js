@@ -10,6 +10,8 @@ const MeterScreen = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [energyUsage, setEnergyUsage] = useState(5);
   const [availableUnit, setAvailableUnit] = useState(333);
+  const [meter, setMeter] = useState("home");
+  const [day, setDay] = useState("today");
   const isFocused = useIsFocused();
 
   useEffect(() => {
@@ -48,24 +50,69 @@ const MeterScreen = () => {
 
   // function to filter energy usage
   const handleUnitUsage = (text) => {
-    if (text.value === "today") {
+    if (text.value === "today" && meter === "home") {
+      setDay("today")
       setEnergyUsage(5)
     };
-    if (text.value === "week") {
-      setEnergyUsage(24)
+    if (text.value === "week" && meter === "home") {
+      setDay("week")
+      setEnergyUsage(25)
     };
-    if (text.value === "month") {
-      setEnergyUsage(46.02)
+    if (text.value === "month" && meter === "home") {
+      setDay("month")
+      setEnergyUsage(320)
+    }
+    if (text.value === "today" && meter === "office") {
+      setDay("today")
+      setEnergyUsage(65)
+    };
+    if (text.value === "week" && meter === "office") {
+      setDay("week")
+      setEnergyUsage(240)
+    };
+    if (text.value === "month" && meter === "office") {
+      setDay("month")
+      setEnergyUsage(660)
     }
   }
 
   // function to filter energy usage for different meter
   const handleMeter = (text) => {
-    if (text.value === "home") {
+    if (text.value === "home" && day === "today") {
+      setMeter("home")
+      setDay("today")
       setAvailableUnit(333)
+      setEnergyUsage(5)
     };
-    if (text.value === "office") {
+    if (text.value === "home" && day === "week") {
+      setMeter("home")
+      setDay("today")
+      setAvailableUnit(333)
+      setEnergyUsage(25)
+    };
+    if (text.value === "home" && day === "month") {
+      setMeter("home")
+      setDay("today")
+      setAvailableUnit(333)
+      setEnergyUsage(320)
+    };
+    if (text.value === "office" && day === "today") {
+      setDay("today")
+      setMeter("office")
+      setAvailableUnit(407)
+      setEnergyUsage(65)
+    };
+    if (text.value === "office" && day === "week") {
+      setDay("today")
+      setMeter("office")
       setAvailableUnit(207)
+      setEnergyUsage(240)
+    };
+    if (text.value === "office" && day === "month") {
+      setDay("today")
+      setMeter("office")
+      setAvailableUnit(207)
+      setEnergyUsage(660)
     };
   }
 
